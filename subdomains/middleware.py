@@ -34,7 +34,8 @@ class SubdomainMiddleware(object):
 
         pattern = r'^(?:(?P<subdomain>.*?)\.)?%s(?::.*)?$' % re.escape(domain)
         matches = re.match(pattern, host)
-
+        logger.error("domain:{0},host:{1}, match:{2}".format(domain,host,matches))
+        
         if matches:
             request.subdomain = matches.group('subdomain')
         else:
@@ -57,7 +58,7 @@ class SubdomainURLRoutingMiddleware(SubdomainMiddleware):
         super(SubdomainURLRoutingMiddleware, self).process_request(request)
 
         subdomain = getattr(request, 'subdomain', UNSET)
-
+        logger.error("subdomain"+subdomains)
         if subdomain is not UNSET:
             urlconf = settings.SUBDOMAIN_URLCONFS.get(subdomain)
             if urlconf is not None:
